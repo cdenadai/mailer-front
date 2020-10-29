@@ -22,7 +22,7 @@ export default {
     },
     methods: {
         route() {
-            return `http://localhost:8000/emails/${this.emailId}/preview`
+            return `${process.env.VUE_APP_BACKEND_BASE_URL}/emails/${this.emailId}/preview`
         },
 
         showPreviewModal(id) {
