@@ -99,7 +99,7 @@
                  <label-without-input label="Data Retorno" :field="toDate(email.data_retorno)"></label-without-input>
                 </b-col>
 
-                <b-col cols="12" v-if="retorno">
+                <b-col cols="12" v-if="email.retorno">
                  <label-without-input label="Retorno" :field="email.retorno"></label-without-input>
                 </b-col>
 
