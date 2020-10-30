@@ -1,12 +1,11 @@
 import api from './api';
 
 export default {
-    uploadFile(file, email_id) {
-        const config = { headers: { 'content-type': 'multipart/form-data' } };
+    getByEmailId(id) {
+        return api.get(`emails/${id}/files`);
+    },
 
-        let formData = new FormData();
-        formData.append(file);
-
-        return api.post(`/emails/${email_id}/files`, formData, config);
+    delete(id) {
+        return api.delete(`emails_attachments/${id}`);
     }
 }

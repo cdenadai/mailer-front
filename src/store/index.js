@@ -5,6 +5,7 @@ import createPersistedState from "vuex-persistedstate";
 import * as alert from './modules/alert';
 import * as auth from './modules/auth';
 import * as emails from './modules/emails';
+import * as emails_attachments from './modules/emailsAttachments';
 import * as emails_params from './modules/emailsParams';
 
 
@@ -19,6 +20,7 @@ export default new Vuex.Store({
     alert,
     auth,
     emails,
+    emails_attachments,
     emails_params,
   },
   plugins: [AuthState],

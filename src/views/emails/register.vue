@@ -34,32 +34,29 @@
                 <b-form-input id="input-3" v-model="email.assunto" trim></b-form-input>
               </b-form-group>
 
+              <b-form-group label="Anexos" label-for="input-5">
+                <b-form-file 
+                  v-model="files"
+                  :state="Boolean(files)"
+                  placeholder="Clique aqui ou arraste e solte seus arquivos..."
+                  drop-placeholder="Solte seu arquivo aqui..."
+                  @input="formFiles.push($event)"
+                  id="input-5"
+                >
+                </b-form-file>
+
+                <b-badge variant="info" v-for="(file, fileIndex) in formFiles" :key="`${file.name}-${fileIndex}`" class="ml-1">
+                    {{ file.name }}
+                    <b-icon icon="x" variant="light" @click="formFiles.splice(fileIndex, 1)"></b-icon>
+                </b-badge>
+              </b-form-group>
+
               <b-form-group label="Conteúdo" label-for="textarea">
                 <b-form-textarea id="textarea" v-model="email.corpo_texto" rows="8"></b-form-textarea>
               </b-form-group>
             
             </div>
 
-            <div class="card-body">
-               Anexos
-
-              <b-form-file 
-                v-model="files"
-                :state="Boolean(files)"
-                placeholder="Clique aqui arraste e solte seus arquivos..."
-                drop-placeholder="Solte seu arquivo aqui..."
-                :multiple="true"
-                :file-name-formatter="formatNames"
-                @input="formFiles.push($event)"
-              >
-                <template slot="file-name" slot-scope="{ names }">
-                  <b-badge variant="dark">{{ names[0] }}</b-badge>
-                  <b-badge v-if="names.length > 1" variant="dark" class="ml-1">
-                    + {{ names.length - 1 }} More files
-                  </b-badge>
-                </template>
-              </b-form-file>
-             </div>
           </div>
 
         </b-col>
@@ -70,7 +67,7 @@
               <b-button variant="success" size="sm" @click="goToNewEmailPage()">
                 <b-icon icon="plus" shift-v="-1"></b-icon> Novo
               </b-button>
-              <b-dropdown text="Opções" class="ml-2" variant="outline-secondary">
+              <b-dropdown text="Opções" class="ml-2" variant="outline-secondary" size="sm">
                 <b-dropdown-item @click="openEmailPreviewModal(email.id)">Visualizar Prévia</b-dropdown-item>
                 <b-dropdown-item @click="sendEmail(email.id)">Enviar E-mail</b-dropdown-item>
               </b-dropdown>
@@ -102,8 +99,12 @@
                  <label-without-input label="Data Retorno" :field="toDate(email.data_retorno)"></label-without-input>
                 </b-col>
 
-                <b-col cols="12">
+                <b-col cols="12" v-if="retorno">
                  <label-without-input label="Retorno" :field="email.retorno"></label-without-input>
+                </b-col>
+
+                <b-col cols="12">
+                  <email-attachments :emailId="email.id"></email-attachments>
                 </b-col>
               </b-row>
             </div>
@@ -121,12 +122,14 @@ import { mapActions, mapGetters } from 'vuex';
 import LabelWithoutInput from '../../components/Forms/LabelWithoutInput';
 import EmailsPreviewModal from './components/Modals/EmailsPreviewModal';
 import Loading from '../../components/Loading';
+import EmailAttachments from './components/EmailAttachments';
 
 export default {
   components: {
     LabelWithoutInput,
     EmailsPreviewModal,
-    Loading
+    Loading,
+    EmailAttachments
   },
   data() {
     return {
@@ -185,8 +188,8 @@ export default {
       location.reload()
     },
 
-    formatNames(files) {
-      return files.length === 1 ? files[0].name : `${files.length} files selected`
+    formatNames() {
+      return this.formFiles.length === 1 ? this.formFiles[0].name : `${this.formFiles.length} files selected`
     },
 
   },

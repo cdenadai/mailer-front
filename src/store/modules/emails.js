@@ -147,7 +147,9 @@ export const actions = {
         commit('SET_LOADING_EMAIL', true);
         
         emailsService.store(email)
-            .then((response) => { router.push({ name: 'emailsEdit', params: { id: response.data.id }}) })
+            .then((response) => {
+                router.push({ name: 'emailsEdit', params: { id: response.data.id } })
+            })
             .catch((error) => { dispatch('alert/showError', error, { root: true }) })
             .then(() => { commit('SET_LOADING_EMAIL', false) })
     }

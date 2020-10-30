@@ -18,15 +18,48 @@ export default {
     },
 
     store(body) {
-        // const config = { headers: { 'content-type': 'multipart/form-data' } };
+        const config = {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data'
+            }
+        };
 
-        // let formData = new FormData();
-        // formData.append(file);
+        console.log
 
-        return api.post('/emails', { ...body })
+        let formData = this.convertFormWithFile(body);
+
+        return api.post('/emails', formData, config)
     },
 
     update(body) {
-        return api.put(`/emails/${body.id}`, { ...body });
+        const config = {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data'
+            }
+        };
+
+        let formData = this.convertFormWithFile(body);
+
+        formData.append('_method', 'PUT');
+
+        return api.post(`/emails/${body.id}`, formData, config);
+    },
+
+    convertFormWithFile(body) {
+        let formData = new FormData();
+
+        body.files.forEach((file, index) => {
+            formData.append(`files[${index}]`, file);
+        });
+
+        delete body.files;
+
+        Object.keys(body).forEach((key) => {
+            formData.append(key, body[key]);
+        })
+
+        return formData; 
     }
 }
