@@ -3,6 +3,7 @@
         <b-table
             striped
             hover
+            responsive
             :stacked="stacked"
             :items="emails"
             :fields="fields"
@@ -14,6 +15,10 @@
         >
             <template v-slot:table-busy>
                 <loading></loading>
+            </template>
+
+             <template v-slot:cell(dests)="data">
+                {{ firstThyrdLetters(data.item.dests) }}
             </template>
 
             <template v-slot:cell(actions)="data">
@@ -106,6 +111,11 @@ export default {
 
         openEmailPreviewModal(id) {
             this.$refs.emailsPreviewModal.showPreviewModal(id);
+        },
+
+        firstThyrdLetters(value) {
+            let length = value.length > 40 ? 40 : value.length; 
+            return value.substr(0, length);
         }
     }
 }
